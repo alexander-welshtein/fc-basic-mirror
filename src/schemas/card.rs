@@ -1,45 +1,59 @@
-use deadpool_postgres::Client;
-use juniper::GraphQLObject;
+use async_graphql::{Context, Object};
+use chrono::{DateTime, Utc};
+use sqlx::postgres::PgRow;
+use sqlx::Row;
 
-use crate::schemas::root::{Context, QueryRoot};
+use crate::schemas::root::{Query, SchemaContext};
 
-#[derive(GraphQLObject)]
-#[graphql(description = "Basic implementation of flashcard entity")]
 pub struct Card {
-    pub id: String,
+    pub id: i64,
     pub front: String,
     pub back: String,
-    pub date: String,
+    pub date: DateTime<Utc>,
 }
 
-#[juniper::graphql_object(Context = Context)]
-impl QueryRoot {
-    #[derive(description = "List of all cards")]
-    async fn card(context: &Context) -> Vec<Card> {
-        let client: Client = match context.pool.get().await {
-            Ok(client) => client,
-            Err(e) => {
-                eprintln!("DB :: error :: {}", e);
-                return Vec::default();
+impl From<&PgRow> for Card {
+    fn from(row: &PgRow) -> Self {
+        Self {
+            id: row.try_get("id").unwrap(),
+            front: row.try_get("front").unwrap(),
+            back: row.try_get("back").unwrap(),
+            date: row.try_get("date").unwrap(),
+        }
+    }
+}
+
+#[Object]
+impl Card {
+    async fn id(&self) -> String {
+        self.id.to_string()
+    }
+
+    async fn front(&self) -> String {
+        self.front.to_string()
+    }
+
+    async fn back(&self) -> String {
+        self.back.to_string()
+    }
+
+    async fn date(&self) -> String { self.date.to_string() }
+}
+
+#[Object]
+impl Query {
+    async fn cards<'ctx>(&self, context: &Context<'ctx>) -> Vec<Card> {
+        let rows = match sqlx::query(include_str!("../../db/select_cards.sql"))
+            .fetch_all(context.data_unchecked::<SchemaContext>().pool.as_ref())
+            .await
+        {
+            Ok(v) => v,
+            Err(_) => {
+                eprintln!("[E] DB :: Select cards");
+                Vec::default()
             }
         };
 
-        let rows = match client.query("SELECT * FROM card", &[]).await {
-            Ok(rows) => rows,
-            Err(e) => {
-                eprintln!("DB :: error :: {}", e);
-                return Vec::default();
-            }
-        };
-
-        rows
-            .into_iter()
-            .map(|row| Card {
-                id: row.get(0),
-                front: row.get(1),
-                back: row.get(2),
-                date: row.get(3),
-            })
-            .collect()
+        rows.iter().map(Card::from).collect()
     }
 }
