@@ -6,6 +6,10 @@
     "launch": "cargo run"
   },
   "dependencies": {
+    "svelte": "^3.40.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
     "webpack": "^5.46.0",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^4.0.0-rc.0",
@@ -17,7 +21,6 @@
     "css-loader": "^6.2.0",
     "postcss-loader": "^6.1.1",
     "svelte-loader": "^3.1.2",
-    "svelte": "^3.40.2",
     "tailwindcss": "^2.2.7",
     "@babel/core": "^7.14.8",
     "@babel/preset-env": "^7.14.8"
