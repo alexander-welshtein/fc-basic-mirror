@@ -23,7 +23,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::Logger::default())
             .app_data(web::Data::new(schema.clone()))
             .service(web::resource("/graphql").guard(guard::Post()).to(handlers::graphql))
-            .service(Files::new("/", "static/dist/").index_file("index.html"))
+            .service(Files::new("/", "static/dist/").index_file("index.html").use_last_modified(false))
     )
         .bind("localhost:3000")?
         .run()
