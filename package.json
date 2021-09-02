@@ -2,7 +2,8 @@
   "name": "flashcards-basic",
   "version": "1.0.0",
   "scripts": {
-    "watch": "webpack --watch --progress --mode development"
+    "watch": "webpack --watch --progress --mode development",
+    "launch": "cargo run"
   },
   "dependencies": {
     "webpack": "^5.46.0",
