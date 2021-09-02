@@ -1,9 +1,9 @@
 <script>
-  import Dashboard from './Dashboard.svelte'
+  import Workspace from './Workspace.svelte'
 </script>
 
 <div
   class="w-full h-full bg-gray-50"
 >
-  <Dashboard/>
+  <Workspace/>
 </div>

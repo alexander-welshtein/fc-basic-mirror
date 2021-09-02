@@ -1,23 +1,17 @@
 <script>
-  import AddButton from './Button.svelte'
   import Flashcard from './Flashcard.svelte'
+  import { CardModel } from '../models/Card';
+  import { onModel } from '../models';
 
-  export let data = [
-    {
-      front: 'This does not tickle my fancy',
-      back: 'Это не щекочет мою фантазию'
-    },
-    {
-      front: 'You\'ve made your country proud',
-      back: 'Вы заставили свою страну гордиться'
-    }
-  ]
+  let cards = []
+
+  onModel(CardModel, state => cards = state.cards)
 </script>
 
 <div
   class="flex"
 >
-  {#each data as item}
-    <Flashcard data={item}/>
+  {#each cards as card}
+    <Flashcard data={card}/>
   {/each}
 </div>
