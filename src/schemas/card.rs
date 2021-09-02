@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 use sqlx::postgres::PgRow;
 use sqlx::Row;
 
-use crate::schemas::root::{Query, SchemaContext};
+use crate::schemas::root::{Mutation, Query, SchemaContext};
 
 pub struct Card {
     pub id: i64,
@@ -37,7 +37,9 @@ impl Card {
         self.back.to_string()
     }
 
-    async fn date(&self) -> String { self.date.to_string() }
+    async fn date(&self) -> String {
+        self.date.to_string()
+    }
 }
 
 #[Object]
@@ -48,12 +50,37 @@ impl Query {
             .await
         {
             Ok(v) => v,
-            Err(_) => {
-                eprintln!("[E] DB :: Select cards");
+            Err(e) => {
+                eprintln!("[E] DB :: Select cards :: {}", e);
                 Vec::default()
             }
         };
 
         rows.iter().map(Card::from).collect()
+    }
+}
+
+#[Object]
+impl Mutation {
+    async fn create_card<'ctx>(
+        &self,
+        context: &Context<'ctx>,
+        front: String,
+        back: String,
+    ) -> Option<Card> {
+        let row = match sqlx::query(include_str!("../../db/insert_card.sql"))
+            .bind(front)
+            .bind(back)
+            .fetch_one(context.data_unchecked::<SchemaContext>().pool.as_ref())
+            .await
+        {
+            Ok(v) => v,
+            Err(e) => {
+                eprintln!("[E] DB :: Create card :: {}", e);
+                return None;
+            }
+        };
+
+        Some(Card::from(&row))
     }
 }

@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use async_graphql::{EmptyMutation, EmptySubscription};
+use async_graphql::EmptySubscription;
 use sqlx::{Pool, Postgres};
 
 pub struct SchemaContext {
@@ -9,12 +9,14 @@ pub struct SchemaContext {
 
 pub struct Query;
 
-pub type Schema = async_graphql::Schema<Query, EmptyMutation, EmptySubscription>;
+pub struct Mutation;
+
+pub type Schema = async_graphql::Schema<Query, Mutation, EmptySubscription>;
 
 pub fn create_schema_with_context(pool: Pool<Postgres>) -> Schema {
-    let schema = async_graphql::Schema::build(Query, EmptyMutation, EmptySubscription)
+    let schema = async_graphql::Schema::build(Query, Mutation, EmptySubscription)
         .data(SchemaContext {
-            pool: Arc::new(pool)
+            pool: Arc::new(pool),
         })
         .finish();
 
