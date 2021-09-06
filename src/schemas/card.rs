@@ -62,13 +62,15 @@ impl Query {
 
 #[Object]
 impl Mutation {
-    async fn create_card<'ctx>(
+    async fn create_or_update_card<'ctx>(
         &self,
         context: &Context<'ctx>,
+        id: i64,
         front: String,
         back: String,
     ) -> Option<Card> {
-        let row = match sqlx::query(include_str!("../../db/insert_card.sql"))
+        let row = match sqlx::query(include_str!("../../db/upsert_card.sql"))
+            .bind(id)
             .bind(front)
             .bind(back)
             .fetch_one(context.data_unchecked::<SchemaContext>().pool.as_ref())

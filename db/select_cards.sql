@@ -1,1 +1,1 @@
-select * from card;
+select * from card order by date desc;

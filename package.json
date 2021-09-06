@@ -6,7 +6,8 @@
     "launch": "cargo run"
   },
   "dependencies": {
-    "svelte": "^3.40.2"
+    "svelte": "^3.40.2",
+    "clsx": "^1.1.1"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
@@ -22,6 +23,7 @@
     "postcss-loader": "^6.1.1",
     "svelte-loader": "^3.1.2",
     "tailwindcss": "^2.2.7",
+    "color": "^4.0.1",
     "@babel/core": "^7.14.8",
     "@babel/preset-env": "^7.14.8"
   }

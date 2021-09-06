@@ -1,5 +1,5 @@
 <script>
-  import Editor from './Editor.svelte'
+  import Creator from './Creator.svelte'
   import Search from './Search.svelte'
 
 </script>
@@ -8,5 +8,5 @@
   class="flex items-center justify-center w-full space-x-4"
 >
   <Search/>
-  <Editor/>
+  <Creator/>
 </div>

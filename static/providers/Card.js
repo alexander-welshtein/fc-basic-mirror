@@ -12,14 +12,14 @@ export const CardProvider = {
     }
   `))['cards'],
   
-  createCard: async ({ front, back }) => (await MasterProvider.sendGraphQLRequest(`
+  createOrUpdateCard: async ({ id, front, back }) => (await MasterProvider.sendGraphQLRequest(`
     mutation {
-      createCard(front: "${front}", back: "${back}") { 
+      createOrUpdateCard(id: ${id || 0}, front: "${front}", back: "${back}") { 
         id
         front
         back
         date
       }
     }
-  `))['createCard']
+  `))['createOrUpdateCard']
 }

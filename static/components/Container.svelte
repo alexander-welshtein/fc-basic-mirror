@@ -1,17 +1,15 @@
 <script>
-  import Flashcard from './Flashcard.svelte'
-  import { CardModel } from '../models/Card';
-  import { onModel } from '../models';
+  import CardItem from "./CardItem.svelte";
+  import { Card, CardModel } from "../models/Card";
+  import { useModel } from "../models";
 
-  let cards = []
+  let cards = [];
 
-  onModel(CardModel, state => cards = state.cards)
+  useModel(CardModel, state => cards = state.cards);
 </script>
 
-<div
-  class="flex"
->
+<div class="flex">
   {#each cards as card}
-    <Flashcard data={card}/>
+    <CardItem card={Card.clone(card)} />
   {/each}
 </div>

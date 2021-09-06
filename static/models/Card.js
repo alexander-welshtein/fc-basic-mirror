@@ -13,7 +13,13 @@ export const Card = {
    * @param {Card} entity 
    * @returns {Card}
    */
-  from: entity => entity
+  from: entity => entity,
+
+  /**
+   * @param {Card} entity 
+   * @returns Card
+   */
+  clone: entity => ({ ...entity })
 }
 
 export const Cards = {
@@ -32,15 +38,11 @@ export const CardModel = {
     loadCards: async () => ({
       cards: await CardProvider.getCards()
     }),
-    createCard: async (_, input) => {
-      const output = await CardProvider.createCard(input)
+    createOrUpdateCard: async card => {
+      await CardProvider.createOrUpdateCard(card)
+      const cards = await CardProvider.getCards()
 
-      return {
-        cards: [
-          ...CardModel.state.cards,
-          output
-        ]
-      }
+      return { cards }
     }
   }
 }

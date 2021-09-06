@@ -1,11 +1,27 @@
+const Color = require('color')
+
+const lighten = (color, value) => Color(color).lighten(value).rgb().string()
+const darken = (color, value) => Color(color).darken(value).rgb().string()
+
 module.exports = {
   purge: [],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: false,
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        accent: {
+          default: '#16A085',
+          lighten: lighten('#16A085', .1),
+          'darken-a': darken('#16A085', .1),
+          'darken-b': darken('#16A085', .2)
+        }
+      }
+    }
   },
   variants: {
-    extend: {},
+    extend: {
+      backgroundColor: ['active']
+    },
   },
   plugins: [],
 }

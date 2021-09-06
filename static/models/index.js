@@ -1,4 +1,4 @@
-export const onModel = (model, on) => {
+export const useModel = (model, on) => {
   model.on = [
     ...model.on || [],
     on
@@ -16,7 +16,7 @@ export const actModel = model => {
     .reduce((result, [key, action]) => ({
       ...result,
       [key]: payload => {
-        const patch = action(model.state, payload)
+        const patch = action(payload)
         patch['then'] ? patch.then(apply) : apply(patch)
       }
     }), {})
